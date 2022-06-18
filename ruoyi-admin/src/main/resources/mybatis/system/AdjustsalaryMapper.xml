@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AdjustsalaryMapper">
+    
+    <resultMap type="Adjustsalary" id="AdjustsalaryResult">
+        <result property="id"    column="id"    />
+        <result property="eid"    column="eid"    />
+        <result property="asdate"    column="asDate"    />
+        <result property="beforesalary"    column="beforeSalary"    />
+        <result property="aftersalary"    column="afterSalary"    />
+        <result property="reason"    column="reason"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAdjustsalaryVo">
+        select id, eid, asDate, beforeSalary, afterSalary, reason, remark from adjustsalary
+    </sql>
+
+    <select id="selectAdjustsalaryList" parameterType="Adjustsalary" resultMap="AdjustsalaryResult">
+        <include refid="selectAdjustsalaryVo"/>
+        <where>  
+            <if test="eid != null "> and eid = #{eid}</if>
+            <if test="asdate != null "> and asDate = #{asdate}</if>
+            <if test="beforesalary != null "> and beforeSalary = #{beforesalary}</if>
+            <if test="aftersalary != null "> and afterSalary = #{aftersalary}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+        </where>
+    </select>
+    
+    <select id="selectAdjustsalaryById" parameterType="Long" resultMap="AdjustsalaryResult">
+        <include refid="selectAdjustsalaryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAdjustsalary" parameterType="Adjustsalary" useGeneratedKeys="true" keyProperty="id">
+        insert into adjustsalary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="asdate != null">asDate,</if>
+            <if test="beforesalary != null">beforeSalary,</if>
+            <if test="aftersalary != null">afterSalary,</if>
+            <if test="reason != null">reason,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="asdate != null">#{asdate},</if>
+            <if test="beforesalary != null">#{beforesalary},</if>
+            <if test="aftersalary != null">#{aftersalary},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAdjustsalary" parameterType="Adjustsalary">
+        update adjustsalary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="asdate != null">asDate = #{asdate},</if>
+            <if test="beforesalary != null">beforeSalary = #{beforesalary},</if>
+            <if test="aftersalary != null">afterSalary = #{aftersalary},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdjustsalaryById" parameterType="Long">
+        delete from adjustsalary where id = #{id}
+    </delete>
+
+    <delete id="deleteAdjustsalaryByIds" parameterType="String">
+        delete from adjustsalary where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

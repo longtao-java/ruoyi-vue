@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.HrMapper">
+    
+    <resultMap type="Hr" id="HrResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="telephone"    column="telephone"    />
+        <result property="address"    column="address"    />
+        <result property="enabled"    column="enabled"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="userface"    column="userface"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHrVo">
+        select id, name, phone, telephone, address, enabled, username, password, userface, remark from hr
+    </sql>
+
+    <select id="selectHrList" parameterType="Hr" resultMap="HrResult">
+        <include refid="selectHrVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="telephone != null  and telephone != ''"> and telephone = #{telephone}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="enabled != null "> and enabled = #{enabled}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="userface != null  and userface != ''"> and userface = #{userface}</if>
+        </where>
+    </select>
+    
+    <select id="selectHrById" parameterType="Long" resultMap="HrResult">
+        <include refid="selectHrVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHr" parameterType="Hr" useGeneratedKeys="true" keyProperty="id">
+        insert into hr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="telephone != null">telephone,</if>
+            <if test="address != null">address,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="userface != null">userface,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="telephone != null">#{telephone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="userface != null">#{userface},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHr" parameterType="Hr">
+        update hr
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="telephone != null">telephone = #{telephone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="userface != null">userface = #{userface},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHrById" parameterType="Long">
+        delete from hr where id = #{id}
+    </delete>
+
+    <delete id="deleteHrByIds" parameterType="String">
+        delete from hr where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

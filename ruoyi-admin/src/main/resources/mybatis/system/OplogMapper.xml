@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OplogMapper">
+    
+    <resultMap type="Oplog" id="OplogResult">
+        <result property="id"    column="id"    />
+        <result property="adddate"    column="addDate"    />
+        <result property="operate"    column="operate"    />
+        <result property="hrid"    column="hrid"    />
+    </resultMap>
+
+    <sql id="selectOplogVo">
+        select id, addDate, operate, hrid from oplog
+    </sql>
+
+    <select id="selectOplogList" parameterType="Oplog" resultMap="OplogResult">
+        <include refid="selectOplogVo"/>
+        <where>  
+            <if test="adddate != null "> and addDate = #{adddate}</if>
+            <if test="operate != null  and operate != ''"> and operate = #{operate}</if>
+            <if test="hrid != null "> and hrid = #{hrid}</if>
+        </where>
+    </select>
+    
+    <select id="selectOplogById" parameterType="Long" resultMap="OplogResult">
+        <include refid="selectOplogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOplog" parameterType="Oplog" useGeneratedKeys="true" keyProperty="id">
+        insert into oplog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adddate != null">addDate,</if>
+            <if test="operate != null">operate,</if>
+            <if test="hrid != null">hrid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adddate != null">#{adddate},</if>
+            <if test="operate != null">#{operate},</if>
+            <if test="hrid != null">#{hrid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOplog" parameterType="Oplog">
+        update oplog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="adddate != null">addDate = #{adddate},</if>
+            <if test="operate != null">operate = #{operate},</if>
+            <if test="hrid != null">hrid = #{hrid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOplogById" parameterType="Long">
+        delete from oplog where id = #{id}
+    </delete>
+
+    <delete id="deleteOplogByIds" parameterType="String">
+        delete from oplog where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

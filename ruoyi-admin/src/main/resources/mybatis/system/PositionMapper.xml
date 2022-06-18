@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PositionMapper">
+    
+    <resultMap type="Position" id="PositionResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="createdate"    column="createDate"    />
+        <result property="enabled"    column="enabled"    />
+    </resultMap>
+
+    <sql id="selectPositionVo">
+        select id, name, createDate, enabled from position
+    </sql>
+
+    <select id="selectPositionList" parameterType="Position" resultMap="PositionResult">
+        <include refid="selectPositionVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="createdate != null "> and createDate = #{createdate}</if>
+            <if test="enabled != null "> and enabled = #{enabled}</if>
+        </where>
+    </select>
+    
+    <select id="selectPositionById" parameterType="Long" resultMap="PositionResult">
+        <include refid="selectPositionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPosition" parameterType="Position" useGeneratedKeys="true" keyProperty="id">
+        insert into position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="createdate != null">createDate,</if>
+            <if test="enabled != null">enabled,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="createdate != null">#{createdate},</if>
+            <if test="enabled != null">#{enabled},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePosition" parameterType="Position">
+        update position
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="createdate != null">createDate = #{createdate},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePositionById" parameterType="Long">
+        delete from position where id = #{id}
+    </delete>
+
+    <delete id="deletePositionByIds" parameterType="String">
+        delete from position where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

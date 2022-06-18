@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DepartmentMapper">
+    
+    <resultMap type="Department" id="DepartmentResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="parentid"    column="parentId"    />
+        <result property="deppath"    column="depPath"    />
+        <result property="enabled"    column="enabled"    />
+        <result property="isparent"    column="isParent"    />
+    </resultMap>
+
+    <sql id="selectDepartmentVo">
+        select id, name, parentId, depPath, enabled, isParent from department
+    </sql>
+
+    <select id="selectDepartmentList" parameterType="Department" resultMap="DepartmentResult">
+        <include refid="selectDepartmentVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="parentid != null "> and parentId = #{parentid}</if>
+            <if test="deppath != null  and deppath != ''"> and depPath = #{deppath}</if>
+            <if test="enabled != null "> and enabled = #{enabled}</if>
+            <if test="isparent != null "> and isParent = #{isparent}</if>
+        </where>
+    </select>
+    
+    <select id="selectDepartmentById" parameterType="Long" resultMap="DepartmentResult">
+        <include refid="selectDepartmentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDepartment" parameterType="Department" useGeneratedKeys="true" keyProperty="id">
+        insert into department
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="parentid != null">parentId,</if>
+            <if test="deppath != null">depPath,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="isparent != null">isParent,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="parentid != null">#{parentid},</if>
+            <if test="deppath != null">#{deppath},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="isparent != null">#{isparent},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDepartment" parameterType="Department">
+        update department
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="parentid != null">parentId = #{parentid},</if>
+            <if test="deppath != null">depPath = #{deppath},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="isparent != null">isParent = #{isparent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDepartmentById" parameterType="Long">
+        delete from department where id = #{id}
+    </delete>
+
+    <delete id="deleteDepartmentByIds" parameterType="String">
+        delete from department where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

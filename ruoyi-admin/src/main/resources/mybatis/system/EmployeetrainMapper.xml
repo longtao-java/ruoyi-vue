@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmployeetrainMapper">
+    
+    <resultMap type="Employeetrain" id="EmployeetrainResult">
+        <result property="id"    column="id"    />
+        <result property="eid"    column="eid"    />
+        <result property="traindate"    column="trainDate"    />
+        <result property="traincontent"    column="trainContent"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectEmployeetrainVo">
+        select id, eid, trainDate, trainContent, remark from employeetrain
+    </sql>
+
+    <select id="selectEmployeetrainList" parameterType="Employeetrain" resultMap="EmployeetrainResult">
+        <include refid="selectEmployeetrainVo"/>
+        <where>  
+            <if test="eid != null "> and eid = #{eid}</if>
+            <if test="traindate != null "> and trainDate = #{traindate}</if>
+            <if test="traincontent != null  and traincontent != ''"> and trainContent = #{traincontent}</if>
+        </where>
+    </select>
+    
+    <select id="selectEmployeetrainById" parameterType="Long" resultMap="EmployeetrainResult">
+        <include refid="selectEmployeetrainVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEmployeetrain" parameterType="Employeetrain" useGeneratedKeys="true" keyProperty="id">
+        insert into employeetrain
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="traindate != null">trainDate,</if>
+            <if test="traincontent != null">trainContent,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="traindate != null">#{traindate},</if>
+            <if test="traincontent != null">#{traincontent},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployeetrain" parameterType="Employeetrain">
+        update employeetrain
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="traindate != null">trainDate = #{traindate},</if>
+            <if test="traincontent != null">trainContent = #{traincontent},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmployeetrainById" parameterType="Long">
+        delete from employeetrain where id = #{id}
+    </delete>
+
+    <delete id="deleteEmployeetrainByIds" parameterType="String">
+        delete from employeetrain where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

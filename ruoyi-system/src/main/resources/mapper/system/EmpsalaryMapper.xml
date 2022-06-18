@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmpsalaryMapper">
+    
+    <resultMap type="Empsalary" id="EmpsalaryResult">
+        <result property="id"    column="id"    />
+        <result property="eid"    column="eid"    />
+        <result property="sid"    column="sid"    />
+    </resultMap>
+
+    <sql id="selectEmpsalaryVo">
+        select id, eid, sid from empsalary
+    </sql>
+
+    <select id="selectEmpsalaryList" parameterType="Empsalary" resultMap="EmpsalaryResult">
+        <include refid="selectEmpsalaryVo"/>
+        <where>  
+            <if test="eid != null "> and eid = #{eid}</if>
+            <if test="sid != null "> and sid = #{sid}</if>
+        </where>
+    </select>
+    
+    <select id="selectEmpsalaryById" parameterType="Long" resultMap="EmpsalaryResult">
+        <include refid="selectEmpsalaryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEmpsalary" parameterType="Empsalary" useGeneratedKeys="true" keyProperty="id">
+        insert into empsalary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="sid != null">sid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="sid != null">#{sid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmpsalary" parameterType="Empsalary">
+        update empsalary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="sid != null">sid = #{sid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmpsalaryById" parameterType="Long">
+        delete from empsalary where id = #{id}
+    </delete>
+
+    <delete id="deleteEmpsalaryByIds" parameterType="String">
+        delete from empsalary where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

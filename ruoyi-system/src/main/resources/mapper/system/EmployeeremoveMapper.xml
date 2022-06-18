@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmployeeremoveMapper">
+    
+    <resultMap type="Employeeremove" id="EmployeeremoveResult">
+        <result property="id"    column="id"    />
+        <result property="eid"    column="eid"    />
+        <result property="afterdepid"    column="afterDepId"    />
+        <result property="afterjobid"    column="afterJobId"    />
+        <result property="removedate"    column="removeDate"    />
+        <result property="reason"    column="reason"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectEmployeeremoveVo">
+        select id, eid, afterDepId, afterJobId, removeDate, reason, remark from employeeremove
+    </sql>
+
+    <select id="selectEmployeeremoveList" parameterType="Employeeremove" resultMap="EmployeeremoveResult">
+        <include refid="selectEmployeeremoveVo"/>
+        <where>  
+            <if test="eid != null "> and eid = #{eid}</if>
+            <if test="afterdepid != null "> and afterDepId = #{afterdepid}</if>
+            <if test="afterjobid != null "> and afterJobId = #{afterjobid}</if>
+            <if test="removedate != null "> and removeDate = #{removedate}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+        </where>
+    </select>
+    
+    <select id="selectEmployeeremoveById" parameterType="Long" resultMap="EmployeeremoveResult">
+        <include refid="selectEmployeeremoveVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEmployeeremove" parameterType="Employeeremove" useGeneratedKeys="true" keyProperty="id">
+        insert into employeeremove
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="afterdepid != null">afterDepId,</if>
+            <if test="afterjobid != null">afterJobId,</if>
+            <if test="removedate != null">removeDate,</if>
+            <if test="reason != null">reason,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="afterdepid != null">#{afterdepid},</if>
+            <if test="afterjobid != null">#{afterjobid},</if>
+            <if test="removedate != null">#{removedate},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployeeremove" parameterType="Employeeremove">
+        update employeeremove
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="afterdepid != null">afterDepId = #{afterdepid},</if>
+            <if test="afterjobid != null">afterJobId = #{afterjobid},</if>
+            <if test="removedate != null">removeDate = #{removedate},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmployeeremoveById" parameterType="Long">
+        delete from employeeremove where id = #{id}
+    </delete>
+
+    <delete id="deleteEmployeeremoveByIds" parameterType="String">
+        delete from employeeremove where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

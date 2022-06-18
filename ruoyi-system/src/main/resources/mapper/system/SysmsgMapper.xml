@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysmsgMapper">
+    
+    <resultMap type="Sysmsg" id="SysmsgResult">
+        <result property="id"    column="id"    />
+        <result property="mid"    column="mid"    />
+        <result property="type"    column="type"    />
+        <result property="hrid"    column="hrid"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
+    <sql id="selectSysmsgVo">
+        select id, mid, type, hrid, state from sysmsg
+    </sql>
+
+    <select id="selectSysmsgList" parameterType="Sysmsg" resultMap="SysmsgResult">
+        <include refid="selectSysmsgVo"/>
+        <where>  
+            <if test="mid != null "> and mid = #{mid}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="hrid != null "> and hrid = #{hrid}</if>
+            <if test="state != null "> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysmsgById" parameterType="Long" resultMap="SysmsgResult">
+        <include refid="selectSysmsgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysmsg" parameterType="Sysmsg" useGeneratedKeys="true" keyProperty="id">
+        insert into sysmsg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mid != null">mid,</if>
+            <if test="type != null">type,</if>
+            <if test="hrid != null">hrid,</if>
+            <if test="state != null">state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mid != null">#{mid},</if>
+            <if test="type != null">#{type},</if>
+            <if test="hrid != null">#{hrid},</if>
+            <if test="state != null">#{state},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysmsg" parameterType="Sysmsg">
+        update sysmsg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mid != null">mid = #{mid},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="hrid != null">hrid = #{hrid},</if>
+            <if test="state != null">state = #{state},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysmsgById" parameterType="Long">
+        delete from sysmsg where id = #{id}
+    </delete>
+
+    <delete id="deleteSysmsgByIds" parameterType="String">
+        delete from sysmsg where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

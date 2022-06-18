@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.JoblevelMapper">
+    
+    <resultMap type="Joblevel" id="JoblevelResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="titlelevel"    column="titleLevel"    />
+        <result property="createdate"    column="createDate"    />
+        <result property="enabled"    column="enabled"    />
+    </resultMap>
+
+    <sql id="selectJoblevelVo">
+        select id, name, titleLevel, createDate, enabled from joblevel
+    </sql>
+
+    <select id="selectJoblevelList" parameterType="Joblevel" resultMap="JoblevelResult">
+        <include refid="selectJoblevelVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="titlelevel != null  and titlelevel != ''"> and titleLevel = #{titlelevel}</if>
+            <if test="createdate != null "> and createDate = #{createdate}</if>
+            <if test="enabled != null "> and enabled = #{enabled}</if>
+        </where>
+    </select>
+    
+    <select id="selectJoblevelById" parameterType="Long" resultMap="JoblevelResult">
+        <include refid="selectJoblevelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertJoblevel" parameterType="Joblevel" useGeneratedKeys="true" keyProperty="id">
+        insert into joblevel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="titlelevel != null">titleLevel,</if>
+            <if test="createdate != null">createDate,</if>
+            <if test="enabled != null">enabled,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="titlelevel != null">#{titlelevel},</if>
+            <if test="createdate != null">#{createdate},</if>
+            <if test="enabled != null">#{enabled},</if>
+         </trim>
+    </insert>
+
+    <update id="updateJoblevel" parameterType="Joblevel">
+        update joblevel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="titlelevel != null">titleLevel = #{titlelevel},</if>
+            <if test="createdate != null">createDate = #{createdate},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteJoblevelById" parameterType="Long">
+        delete from joblevel where id = #{id}
+    </delete>
+
+    <delete id="deleteJoblevelByIds" parameterType="String">
+        delete from joblevel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SalaryMapper">
+    
+    <resultMap type="Salary" id="SalaryResult">
+        <result property="id"    column="id"    />
+        <result property="basicsalary"    column="basicSalary"    />
+        <result property="bonus"    column="bonus"    />
+        <result property="lunchsalary"    column="lunchSalary"    />
+        <result property="trafficsalary"    column="trafficSalary"    />
+        <result property="allsalary"    column="allSalary"    />
+        <result property="pensionbase"    column="pensionBase"    />
+        <result property="pensionper"    column="pensionPer"    />
+        <result property="createdate"    column="createDate"    />
+        <result property="medicalbase"    column="medicalBase"    />
+        <result property="medicalper"    column="medicalPer"    />
+        <result property="accumulationfundbase"    column="accumulationFundBase"    />
+        <result property="accumulationfundper"    column="accumulationFundPer"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectSalaryVo">
+        select id, basicSalary, bonus, lunchSalary, trafficSalary, allSalary, pensionBase, pensionPer, createDate, medicalBase, medicalPer, accumulationFundBase, accumulationFundPer, name from salary
+    </sql>
+
+    <select id="selectSalaryList" parameterType="Salary" resultMap="SalaryResult">
+        <include refid="selectSalaryVo"/>
+        <where>  
+            <if test="basicsalary != null "> and basicSalary = #{basicsalary}</if>
+            <if test="bonus != null "> and bonus = #{bonus}</if>
+            <if test="lunchsalary != null "> and lunchSalary = #{lunchsalary}</if>
+            <if test="trafficsalary != null "> and trafficSalary = #{trafficsalary}</if>
+            <if test="allsalary != null "> and allSalary = #{allsalary}</if>
+            <if test="pensionbase != null "> and pensionBase = #{pensionbase}</if>
+            <if test="pensionper != null "> and pensionPer = #{pensionper}</if>
+            <if test="createdate != null "> and createDate = #{createdate}</if>
+            <if test="medicalbase != null "> and medicalBase = #{medicalbase}</if>
+            <if test="medicalper != null "> and medicalPer = #{medicalper}</if>
+            <if test="accumulationfundbase != null "> and accumulationFundBase = #{accumulationfundbase}</if>
+            <if test="accumulationfundper != null "> and accumulationFundPer = #{accumulationfundper}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSalaryById" parameterType="Long" resultMap="SalaryResult">
+        <include refid="selectSalaryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSalary" parameterType="Salary" useGeneratedKeys="true" keyProperty="id">
+        insert into salary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="basicsalary != null">basicSalary,</if>
+            <if test="bonus != null">bonus,</if>
+            <if test="lunchsalary != null">lunchSalary,</if>
+            <if test="trafficsalary != null">trafficSalary,</if>
+            <if test="allsalary != null">allSalary,</if>
+            <if test="pensionbase != null">pensionBase,</if>
+            <if test="pensionper != null">pensionPer,</if>
+            <if test="createdate != null">createDate,</if>
+            <if test="medicalbase != null">medicalBase,</if>
+            <if test="medicalper != null">medicalPer,</if>
+            <if test="accumulationfundbase != null">accumulationFundBase,</if>
+            <if test="accumulationfundper != null">accumulationFundPer,</if>
+            <if test="name != null">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="basicsalary != null">#{basicsalary},</if>
+            <if test="bonus != null">#{bonus},</if>
+            <if test="lunchsalary != null">#{lunchsalary},</if>
+            <if test="trafficsalary != null">#{trafficsalary},</if>
+            <if test="allsalary != null">#{allsalary},</if>
+            <if test="pensionbase != null">#{pensionbase},</if>
+            <if test="pensionper != null">#{pensionper},</if>
+            <if test="createdate != null">#{createdate},</if>
+            <if test="medicalbase != null">#{medicalbase},</if>
+            <if test="medicalper != null">#{medicalper},</if>
+            <if test="accumulationfundbase != null">#{accumulationfundbase},</if>
+            <if test="accumulationfundper != null">#{accumulationfundper},</if>
+            <if test="name != null">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSalary" parameterType="Salary">
+        update salary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="basicsalary != null">basicSalary = #{basicsalary},</if>
+            <if test="bonus != null">bonus = #{bonus},</if>
+            <if test="lunchsalary != null">lunchSalary = #{lunchsalary},</if>
+            <if test="trafficsalary != null">trafficSalary = #{trafficsalary},</if>
+            <if test="allsalary != null">allSalary = #{allsalary},</if>
+            <if test="pensionbase != null">pensionBase = #{pensionbase},</if>
+            <if test="pensionper != null">pensionPer = #{pensionper},</if>
+            <if test="createdate != null">createDate = #{createdate},</if>
+            <if test="medicalbase != null">medicalBase = #{medicalbase},</if>
+            <if test="medicalper != null">medicalPer = #{medicalper},</if>
+            <if test="accumulationfundbase != null">accumulationFundBase = #{accumulationfundbase},</if>
+            <if test="accumulationfundper != null">accumulationFundPer = #{accumulationfundper},</if>
+            <if test="name != null">name = #{name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSalaryById" parameterType="Long">
+        delete from salary where id = #{id}
+    </delete>
+
+    <delete id="deleteSalaryByIds" parameterType="String">
+        delete from salary where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

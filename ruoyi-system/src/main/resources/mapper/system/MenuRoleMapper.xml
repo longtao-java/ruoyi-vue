@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.MenuRoleMapper">
+    
+    <resultMap type="MenuRole" id="MenuRoleResult">
+        <result property="id"    column="id"    />
+        <result property="mid"    column="mid"    />
+        <result property="rid"    column="rid"    />
+    </resultMap>
+
+    <sql id="selectMenuRoleVo">
+        select id, mid, rid from menu_role
+    </sql>
+
+    <select id="selectMenuRoleList" parameterType="MenuRole" resultMap="MenuRoleResult">
+        <include refid="selectMenuRoleVo"/>
+        <where>  
+            <if test="mid != null "> and mid = #{mid}</if>
+            <if test="rid != null "> and rid = #{rid}</if>
+        </where>
+    </select>
+    
+    <select id="selectMenuRoleById" parameterType="Long" resultMap="MenuRoleResult">
+        <include refid="selectMenuRoleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMenuRole" parameterType="MenuRole" useGeneratedKeys="true" keyProperty="id">
+        insert into menu_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mid != null">mid,</if>
+            <if test="rid != null">rid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mid != null">#{mid},</if>
+            <if test="rid != null">#{rid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMenuRole" parameterType="MenuRole">
+        update menu_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mid != null">mid = #{mid},</if>
+            <if test="rid != null">rid = #{rid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMenuRoleById" parameterType="Long">
+        delete from menu_role where id = #{id}
+    </delete>
+
+    <delete id="deleteMenuRoleByIds" parameterType="String">
+        delete from menu_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

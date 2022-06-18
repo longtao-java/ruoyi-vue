@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmployeeecMapper">
+    
+    <resultMap type="Employeeec" id="EmployeeecResult">
+        <result property="id"    column="id"    />
+        <result property="eid"    column="eid"    />
+        <result property="ecdate"    column="ecDate"    />
+        <result property="ecreason"    column="ecReason"    />
+        <result property="ecpoint"    column="ecPoint"    />
+        <result property="ectype"    column="ecType"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectEmployeeecVo">
+        select id, eid, ecDate, ecReason, ecPoint, ecType, remark from employeeec
+    </sql>
+
+    <select id="selectEmployeeecList" parameterType="Employeeec" resultMap="EmployeeecResult">
+        <include refid="selectEmployeeecVo"/>
+        <where>  
+            <if test="eid != null "> and eid = #{eid}</if>
+            <if test="ecdate != null "> and ecDate = #{ecdate}</if>
+            <if test="ecreason != null  and ecreason != ''"> and ecReason = #{ecreason}</if>
+            <if test="ecpoint != null "> and ecPoint = #{ecpoint}</if>
+            <if test="ectype != null "> and ecType = #{ectype}</if>
+        </where>
+    </select>
+    
+    <select id="selectEmployeeecById" parameterType="Long" resultMap="EmployeeecResult">
+        <include refid="selectEmployeeecVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEmployeeec" parameterType="Employeeec" useGeneratedKeys="true" keyProperty="id">
+        insert into employeeec
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="ecdate != null">ecDate,</if>
+            <if test="ecreason != null">ecReason,</if>
+            <if test="ecpoint != null">ecPoint,</if>
+            <if test="ectype != null">ecType,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="ecdate != null">#{ecdate},</if>
+            <if test="ecreason != null">#{ecreason},</if>
+            <if test="ecpoint != null">#{ecpoint},</if>
+            <if test="ectype != null">#{ectype},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployeeec" parameterType="Employeeec">
+        update employeeec
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="ecdate != null">ecDate = #{ecdate},</if>
+            <if test="ecreason != null">ecReason = #{ecreason},</if>
+            <if test="ecpoint != null">ecPoint = #{ecpoint},</if>
+            <if test="ectype != null">ecType = #{ectype},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmployeeecById" parameterType="Long">
+        delete from employeeec where id = #{id}
+    </delete>
+
+    <delete id="deleteEmployeeecByIds" parameterType="String">
+        delete from employeeec where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

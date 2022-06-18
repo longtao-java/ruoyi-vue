@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppraiseMapper">
+    
+    <resultMap type="Appraise" id="AppraiseResult">
+        <result property="id"    column="id"    />
+        <result property="eid"    column="eid"    />
+        <result property="appdate"    column="appDate"    />
+        <result property="appresult"    column="appResult"    />
+        <result property="appcontent"    column="appContent"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAppraiseVo">
+        select id, eid, appDate, appResult, appContent, remark from appraise
+    </sql>
+
+    <select id="selectAppraiseList" parameterType="Appraise" resultMap="AppraiseResult">
+        <include refid="selectAppraiseVo"/>
+        <where>  
+            <if test="eid != null "> and eid = #{eid}</if>
+            <if test="appdate != null "> and appDate = #{appdate}</if>
+            <if test="appresult != null  and appresult != ''"> and appResult = #{appresult}</if>
+            <if test="appcontent != null  and appcontent != ''"> and appContent = #{appcontent}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppraiseById" parameterType="Long" resultMap="AppraiseResult">
+        <include refid="selectAppraiseVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAppraise" parameterType="Appraise" useGeneratedKeys="true" keyProperty="id">
+        insert into appraise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="appdate != null">appDate,</if>
+            <if test="appresult != null">appResult,</if>
+            <if test="appcontent != null">appContent,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="appdate != null">#{appdate},</if>
+            <if test="appresult != null">#{appresult},</if>
+            <if test="appcontent != null">#{appcontent},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppraise" parameterType="Appraise">
+        update appraise
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="appdate != null">appDate = #{appdate},</if>
+            <if test="appresult != null">appResult = #{appresult},</if>
+            <if test="appcontent != null">appContent = #{appcontent},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAppraiseById" parameterType="Long">
+        delete from appraise where id = #{id}
+    </delete>
+
+    <delete id="deleteAppraiseByIds" parameterType="String">
+        delete from appraise where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

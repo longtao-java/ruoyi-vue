@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.MsgcontentMapper">
+    
+    <resultMap type="Msgcontent" id="MsgcontentResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="message"    column="message"    />
+        <result property="createdate"    column="createDate"    />
+    </resultMap>
+
+    <sql id="selectMsgcontentVo">
+        select id, title, message, createDate from msgcontent
+    </sql>
+
+    <select id="selectMsgcontentList" parameterType="Msgcontent" resultMap="MsgcontentResult">
+        <include refid="selectMsgcontentVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="message != null  and message != ''"> and message = #{message}</if>
+            <if test="createdate != null "> and createDate = #{createdate}</if>
+        </where>
+    </select>
+    
+    <select id="selectMsgcontentById" parameterType="Long" resultMap="MsgcontentResult">
+        <include refid="selectMsgcontentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMsgcontent" parameterType="Msgcontent" useGeneratedKeys="true" keyProperty="id">
+        insert into msgcontent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="message != null">message,</if>
+            <if test="createdate != null">createDate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="message != null">#{message},</if>
+            <if test="createdate != null">#{createdate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMsgcontent" parameterType="Msgcontent">
+        update msgcontent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="message != null">message = #{message},</if>
+            <if test="createdate != null">createDate = #{createdate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMsgcontentById" parameterType="Long">
+        delete from msgcontent where id = #{id}
+    </delete>
+
+    <delete id="deleteMsgcontentByIds" parameterType="String">
+        delete from msgcontent where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

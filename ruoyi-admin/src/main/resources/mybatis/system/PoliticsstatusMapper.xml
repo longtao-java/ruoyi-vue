@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PoliticsstatusMapper">
+    
+    <resultMap type="Politicsstatus" id="PoliticsstatusResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectPoliticsstatusVo">
+        select id, name from politicsstatus
+    </sql>
+
+    <select id="selectPoliticsstatusList" parameterType="Politicsstatus" resultMap="PoliticsstatusResult">
+        <include refid="selectPoliticsstatusVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectPoliticsstatusById" parameterType="Long" resultMap="PoliticsstatusResult">
+        <include refid="selectPoliticsstatusVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPoliticsstatus" parameterType="Politicsstatus" useGeneratedKeys="true" keyProperty="id">
+        insert into politicsstatus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePoliticsstatus" parameterType="Politicsstatus">
+        update politicsstatus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePoliticsstatusById" parameterType="Long">
+        delete from politicsstatus where id = #{id}
+    </delete>
+
+    <delete id="deletePoliticsstatusByIds" parameterType="String">
+        delete from politicsstatus where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

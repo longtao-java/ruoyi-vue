@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.HrRoleMapper">
+    
+    <resultMap type="HrRole" id="HrRoleResult">
+        <result property="id"    column="id"    />
+        <result property="hrid"    column="hrid"    />
+        <result property="rid"    column="rid"    />
+    </resultMap>
+
+    <sql id="selectHrRoleVo">
+        select id, hrid, rid from hr_role
+    </sql>
+
+    <select id="selectHrRoleList" parameterType="HrRole" resultMap="HrRoleResult">
+        <include refid="selectHrRoleVo"/>
+        <where>  
+            <if test="hrid != null "> and hrid = #{hrid}</if>
+            <if test="rid != null "> and rid = #{rid}</if>
+        </where>
+    </select>
+    
+    <select id="selectHrRoleById" parameterType="Long" resultMap="HrRoleResult">
+        <include refid="selectHrRoleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHrRole" parameterType="HrRole" useGeneratedKeys="true" keyProperty="id">
+        insert into hr_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hrid != null">hrid,</if>
+            <if test="rid != null">rid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hrid != null">#{hrid},</if>
+            <if test="rid != null">#{rid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrRole" parameterType="HrRole">
+        update hr_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hrid != null">hrid = #{hrid},</if>
+            <if test="rid != null">rid = #{rid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHrRoleById" parameterType="Long">
+        delete from hr_role where id = #{id}
+    </delete>
+
+    <delete id="deleteHrRoleByIds" parameterType="String">
+        delete from hr_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
